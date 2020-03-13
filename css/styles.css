@@ -126,7 +126,7 @@ label {
   font-size: 16px;
   line-height: 26px;
   color: #000;
-  margin-bottom: 10px; }
+  margin-bottom: 2px; }
 
 textarea,
 input {
@@ -227,7 +227,7 @@ input:-webkit-autofill:active {
 
 header {
   position: relative;
-  background: #495057;
+  background: #6D8CAA;
   color: #fff;
   padding: 28px 0 22px;
   font-size: 16px;
@@ -973,7 +973,11 @@ dl#csschart span b {
 dl#csschart span {
   width: 98%;
   height: 50%;
-  background: #dee2e6; }
+  background: #e9ecef;
+  background: -webkit-gradient(linear, left top, left bottom, from(#e9ecef), color-stop(73%, #6d8caa));
+  background: -o-linear-gradient(top, #e9ecef 0%, #6d8caa 73%);
+  background: linear-gradient(to bottom, #e9ecef 0%, #6d8caa 73%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e9ecef', endColorstr='#6d8caa',GradientType=0 ); }
 
 dl#csschart .sub {
   margin-left: -33px; }

@@ -6,30 +6,33 @@ let db;
 
 const excludeMetric = ['day']; //массив исключений для фильтра metric
 const urlDataFile = 'https://raw.githubusercontent.com/vladimir-mit/test-app/master/data/data.json';
+const numberOfRecentEntries = 7; //количество последних записей при первой загрузке
 
 const firstUppercaseLetter = (word) => word.charAt(0).toUpperCase() + word.slice(1);
 const diffArray = (a, b) => a.filter((i) => b.indexOf(i) < 0);
+const numberFormat = (number) => new Intl.NumberFormat('ru-RU').format(number);
+const numberFloatFormat = (number, floatcount) => parseFloat(number.toFixed(floatcount));
 
 const transformMonthDate = (month) => ('0'+(month+1)).slice(-2);
 const transformDayDate = (day) => ('0'+(day)).slice(-2);
 const setDayOfTheMonth = (date, day = 1) => {
 	let dt = new Date(date);
-
 	switch (day) {
 		case 'first':
-			dt.setDate(1);
+            dt.setDate(1);
+            dt.setHours(0, 0, 0, 0);
 			break;
 		case 'last':
 			let dtYear = dt.getFullYear();
 			let dtMonth = transformMonthDate(dt.getMonth());
 			let dtLastDay = transformDayDate(new Date(dtYear, dtMonth, 0).getDate());
-			dt.setDate(dtLastDay);
+            dt.setDate(dtLastDay);
+            dt.setHours(23, 59, 59, 59);
 			break;
 		default:
 			dt.setDate(day);
 			break;
 	}
-
 	return dt;
 }
 const getStringDate = (date, type = null) => {
@@ -37,14 +40,12 @@ const getStringDate = (date, type = null) => {
 	let dtYear = dt.getFullYear();
 	let dtMonth = transformMonthDate(dt.getMonth());
 	let dtDay = transformDayDate(dt.getDate());
-
 	if (type === 'MY') {
 		return `${dtMonth}-${dtYear}`;	
 	}
 	if (type === 'timestamp') {
 		return dt.getTime();
 	}
-
 	return `${dtYear}-${dtMonth}-${dtDay}`;
 }
 
@@ -107,7 +108,6 @@ const getDataFromFileXHR = (dataUrl) => {
 		if (xhr.readyState === 4) {
 			if (xhr.status === 200) {
 				console.log('file upload - ok');
-				//return xhr.response;
 			} else {
 				console.error(xhr.statusText);
 			}
@@ -147,6 +147,7 @@ const applyFilter = (formElemets) => {
 //отобразить все записи в таблице
 const allShown = () => getStatsForTable(db, null, 'next', true);
 
+//добавить все варианты значений в фильтры
 const getValuesForFiltres = (db) => {
 	let tx = db.transaction(['stats'], 'readonly');
 	let store = tx.objectStore('stats');
@@ -175,7 +176,7 @@ const connectDB = (dbName, dbVersion) => {
       }
 
 	  //создание индексов из первой записи в файле
-      let dataIndexNames = allDataFromFileXHR.shift();
+      let dataIndexNames = allDataFromFileXHR.slice(0, 1)[0];
       for (let val in dataIndexNames) {
          if (!stats.indexNames.contains(val)) {
                stats.createIndex(val, val);
@@ -246,9 +247,11 @@ const getStatsForTable = (db, key = null, order = 'prev', allShown = false, date
 		req.onsuccess = (event) => {
 			let cursor = event.target.result;
 			if (cursor) {
+                console.log(cursor.value);
 				allNotes.push(cursor.value);
-				cursor.continue();
+                cursor.continue();
 			} else {
+                console.log(allNotes);
 				displayNotesTable(allNotes, key, order, true);
 				ifSuccessMessages('display');
 			}
@@ -257,11 +260,16 @@ const getStatsForTable = (db, key = null, order = 'prev', allShown = false, date
 		req.onerror = (event) => ifErrorMessage(event.target.errorCode);
 
 	} else {
-		//отображение записей в таблице без указания индекса
-		allN = store.getAll(null, (allShown) ? null : 8);
-		allN.onsuccess = (event) => {
-			displayNotesTable(event.target.result, null, order, allShown);
-		}
+        //отображение записей в таблице (при загрузке стр) без указания индекса
+        let countRequest = store.count();
+        countRequest.onsuccess = () => {
+            //при первой загрузке показывать только 7 (numberOfRecentEntries) записей
+            let rangeFrom = (allShown) ? null : IDBKeyRange.lowerBound(countRequest.result - numberOfRecentEntries, true); 
+            allN = store.getAll(rangeFrom, null);
+            allN.onsuccess = (event) => {
+                displayNotesTable(event.target.result, null, order, allShown);
+            }
+        }
 	}
 }
 
@@ -273,11 +281,10 @@ const getStatsForGraph = (db, key = 'impressions', dateFrom = null, dateTo = nul
 
 	let keyRange = null;
 	let allNotes = [];
-	let index = store.index(keyForGraph);
+	let index = store.index('day'); //сортируем график по дате
 	
 	if (dateFrom && dateTo && (dateFrom < dateTo)) {
 		//добавление выбранного диапазона дат
-		index = store.index('day');
 		keyRange = IDBKeyRange.bound(dateFrom, dateTo);
 	}
 
@@ -306,7 +313,7 @@ const displayNotesTable = (notes, activeKey = null, order = 'next', allShown = f
     //добавить проверку на наличие записей
 
     //создание head таблицы
-    let notesHead = notes.shift();
+    let notesHead = notes.slice(0, 1)[0];
     let noteKeys = Object.keys(notesHead);
     let noteOrder = (order === 'next') ? 'prev' : 'next';
     let listHTMLHead = '<thead class="thead-light"><tr>';
@@ -397,7 +404,7 @@ const displayNotesGraph = (notes, key = 'impressions') => {
 	let onePercent = maxValue / 100;
 	for (let key in arrBottomSum) {
 		let valueInPercent = Math.floor(arrBottomSum[key] / onePercent); //переводим значения в проценты
-		listMain += `<dd style="width:${liWidth}%;" class="p${valueInPercent}"><span><b>${parseFloat(arrBottomSum[key].toFixed(4))}</b></span></dd>`;
+		listMain += `<dd style="width:${liWidth}%;" class="p${valueInPercent}"><span><b>${numberFormat( numberFloatFormat(arrBottomSum[key], 4) )}</b></span></dd>`;
 	}
     document.getElementById('csschart').innerHTML = listMain;
     //mainChart
@@ -406,7 +413,7 @@ const displayNotesGraph = (notes, key = 'impressions') => {
 	let listLeft = '';
 	for (let i = 100; i >= 0; i -= 10) {
 		let liValue = parseInt(onePercent * i);
-		listLeft += `<li>${liValue}</li>`;
+		listLeft += `<li>${numberFormat(liValue)}</li>`;
 	}
     document.getElementById('leftChart').innerHTML = listLeft;
     //leftChart
@@ -419,24 +426,17 @@ const allMonth = (notes) => {
 	let listSelectTo = '';
     let arrDate = [];
 
-    //добавить проверку на наличие записей
-
     for (let i = 0; i < notes.length; i++) {
         let note = notes[i];
 
 		let noteDate = new Date(note.day);
-		let valueDateTo = getStringDate(setDayOfTheMonth(noteDate, 'last'));
-		let valueDateFrom = getStringDate(setDayOfTheMonth(noteDate, 'first'));
+        let valueDateFrom = getStringDate(setDayOfTheMonth(noteDate, 'first'));
+        let valueDateTo = getStringDate(setDayOfTheMonth(noteDate, 'last'));
 		let titleDate = getStringDate(noteDate, 'MY');
-		let noteTimestamp = getStringDate(valueDateFrom, 'timestamp');
+        let noteTimestamp = getStringDate(setDayOfTheMonth(noteDate, 'first'), 'timestamp');
 		
 		arrDate[`${noteTimestamp}`] = {valueDateFrom, valueDateTo, titleDate, noteTimestamp};
-      //arrDate.push({valueDate: `${noteDay}-${noteMonth}-${noteYear}` , titleDate: `${noteMonth}-${noteYear}`, timestamp: noteTimestamp });
 	}
-   //сортируем по убыванию
-   // !!!доделать
-   //let uniqueArrDate = arrDate.sort((a, b) => b.timestamp - a.timestamp); 
-   //let uniqueArrDate = arrDate.filter((v, i, a) => a.indexOf(v.timestamp) === i.timestamp).sort((a, b) => b.timestamp - a.timestamp);
 
 	for (let key in arrDate) {
 		listSelectFrom += `<option value="${arrDate[key].valueDateFrom}">${arrDate[key].titleDate}</option>`;
@@ -445,12 +445,14 @@ const allMonth = (notes) => {
 
     document.getElementById('monthFrom').innerHTML = listSelectFrom;
     document.getElementById('monthTo').innerHTML = listSelectTo;
+    document.getElementById('monthFrom').selectedIndex = 0;
+	document.getElementById('monthTo').selectedIndex = document.getElementById('monthTo').options.length-1;
 }
 
 //добавление всех метрик в фильтр
 const allMetric = (notes, excludeArr = []) => {
 	let listSelect = '';
-	let noteKeys = Object.keys(notes.shift()); //получаем ключи только первой записи
+	let noteKeys = Object.keys(notes.slice(0, 1)[0]); //получаем ключи только первой записи
 	let filteredNoteKeys = diffArray(noteKeys, excludeArr); //убираем ненужные ключи
 
     for (let val in filteredNoteKeys) {
