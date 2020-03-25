@@ -1,13 +1,8 @@
 @charset "UTF-8";
 @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700,700i&subset=cyrillic,cyrillic-ext,latin-ext");
-/* text colors */
-/* bg colors */
-/* links */
-/* H1... */
-/* forms */
-/* other */
+
 body {
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-style: normal;
   font-weight: normal;
   font-size: 16px;
@@ -61,16 +56,12 @@ b, strong {
 h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5 {
   font-weight: 500;
   color: #24272a;
-  font-family: "Rubik", sans-serif; }
+  font-family: "Roboto", sans-serif; }
 
 h1, .h1 {
   font-size: 40px;
   line-height: 40px;
   margin: 0 0 41px 0; }
-
-.site-blocks-title h1,
-.site-blocks-title .h1 {
-  margin: 0; }
 
 h2, .h2 {
   font-size: 28px;
@@ -122,7 +113,7 @@ input:focus {
 
 label {
   display: block;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: 16px;
   line-height: 26px;
   color: #000;
@@ -132,7 +123,7 @@ textarea,
 input {
   display: inline-block;
   vertical-align: top;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: 16px;
   line-height: 17px;
   color: #000;
@@ -236,142 +227,6 @@ header {
 
 header .container {
   position: relative; }
-
-/* menu */
-nav {
-  display: block; }
-
-nav ul {
-  display: block;
-  list-style-type: none;
-  padding: 0;
-  margin: 0; }
-
-nav ul li {
-  display: block;
-  padding-bottom: 6px; }
-
-nav ul li a {
-  color: #fff; }
-
-nav ul li a:hover {
-  color: #b29559; }
-
-.main-menu-wrap {
-  position: relative;
-  z-index: 1; }
-
-.main-menu-wrap nav {
-  overflow: auto; }
-
-.main-menu-wrap::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  height: 100%;
-  width: 50%;
-  background: #b29559; }
-
-.main-menu-wrap--brown-right {
-  position: relative;
-  max-width: 100%;
-  overflow: hidden; }
-
-.main-menu-wrap--brown-right::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: -20px;
-  display: block;
-  height: 100%;
-  width: 20px;
-  background: #b29559; }
-
-.main-menu-wrap__ul {
-  padding: 16px 0 14px;
-  font-size: 20px; }
-
-.main-menu-wrap__ul li {
-  display: inline-block;
-  vertical-align: top;
-  margin-right: 39px;
-  white-space: nowrap; }
-
-.site-btn-toggle-menu {
-  border: none;
-  display: none;
-  cursor: pointer;
-  width: 26px;
-  outline: 0 !important;
-  background: 0 0;
-  padding: 0;
-  -webkit-transition: all 0.5s cubic-bezier(0.6, 0.05, 0.28, 0.91);
-  -o-transition: all 0.5s cubic-bezier(0.6, 0.05, 0.28, 0.91);
-  transition: all 0.5s cubic-bezier(0.6, 0.05, 0.28, 0.91);
-  position: absolute;
-  top: 20px;
-  right: 81px;
-  z-index: 10; }
-
-.site-btn-phones-menu span,
-.site-btn-toggle-menu span {
-  display: block;
-  width: 26px;
-  height: 2px;
-  margin-bottom: 4px;
-  background-color: #FFF;
-  -webkit-transition: opacity 0.5s, background-color 0.5s, -webkit-transform 0.5s cubic-bezier(0.6, 0.05, 0.28, 0.91), -webkit-box-shadow 250ms;
-  transition: opacity 0.5s, background-color 0.5s, -webkit-transform 0.5s cubic-bezier(0.6, 0.05, 0.28, 0.91), -webkit-box-shadow 250ms;
-  -o-transition: transform 0.5s cubic-bezier(0.6, 0.05, 0.28, 0.91), opacity 0.5s, box-shadow 250ms, background-color 0.5s;
-  transition: transform 0.5s cubic-bezier(0.6, 0.05, 0.28, 0.91), opacity 0.5s, box-shadow 250ms, background-color 0.5s;
-  transition: transform 0.5s cubic-bezier(0.6, 0.05, 0.28, 0.91), opacity 0.5s, box-shadow 250ms, background-color 0.5s, -webkit-transform 0.5s cubic-bezier(0.6, 0.05, 0.28, 0.91), -webkit-box-shadow 250ms; }
-
-.site-btn-toggle-menu__middle {
-  width: 22px; }
-
-.site-btn-toggle-menu span:last-child {
-  margin-bottom: 0; }
-
-.show-mobile-menu .site-btn-toggle-menu__top {
-  -webkit-transform: translateY(6px) rotate(-135deg);
-  -ms-transform: translateY(6px) rotate(-135deg);
-  transform: translateY(6px) rotate(-135deg); }
-
-.show-mobile-menu .site-btn-toggle-menu__middle {
-  width: 26px;
-  -webkit-transform: scale(0);
-  -ms-transform: scale(0);
-  transform: scale(0); }
-
-.show-mobile-menu .site-btn-toggle-menu__bottom {
-  -webkit-transform: translateY(-6px) rotate(-45deg);
-  -ms-transform: translateY(-6px) rotate(-45deg);
-  transform: translateY(-6px) rotate(-45deg); }
-
-.site-btn-phones-menu {
-  display: none;
-  padding-top: 6px;
-  position: absolute;
-  top: 13px;
-  right: 20px;
-  width: 28px;
-  height: 28px;
-  background: transparent url("../img/icons/icon-phone-white.png") center center no-repeat;
-  cursor: pointer;
-  -webkit-transition: all 0.5s cubic-bezier(0.6, 0.05, 0.28, 0.91);
-  -o-transition: all 0.5s cubic-bezier(0.6, 0.05, 0.28, 0.91);
-  transition: all 0.5s cubic-bezier(0.6, 0.05, 0.28, 0.91); }
-
-.site-btn-phones-menu span {
-  opacity: 0; }
-
-.site-btn-phones-menu.show-mobile-menu {
-  background-size: 0; }
-
-.site-btn-phones-menu.show-mobile-menu span {
-  opacity: 1; }
 
 /* footer */
 footer {
@@ -535,8 +390,7 @@ footer p {
 .table th:hover {
   cursor: pointer; }
 
-.th-order-prev::after,
-.th-order-next::after {
+.th-order::after {
   content: "";
   display: inline-block;
   vertical-align: middle;
@@ -545,14 +399,14 @@ footer p {
   margin-left: 2px;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
-  border-top: 8px solid #000;
-  border-bottom: none; }
-
-.th-order-next::after {
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
   border-bottom: 8px solid #000;
   border-top: none; }
+
+.th-order.next::after {
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 8px solid #000;
+  border-bottom: none; }
 
 .table {
   width: 100%;
@@ -563,7 +417,8 @@ footer p {
 .table td {
   padding: 0.75rem;
   vertical-align: top;
-  border-top: 1px solid #dee2e6; }
+  border-top: 1px solid #dee2e6;
+  white-space: nowrap; }
 
 .table thead th {
   vertical-align: bottom;
@@ -904,14 +759,10 @@ select.form-control:focus::-ms-value {
   display: block;
   width: 100%; }
 
-/* 
-Css Chart created by Alen Grakalic
-Brought to you by Css Globe (cssglobe.com)
-*/
 ul.xAxis {
   margin: 0;
   padding: 0;
-  width: 454px;
+  width: 100%;
   display: inline-block; }
 
 ul.xAxis li {
@@ -969,7 +820,6 @@ dl#csschart span b {
   -ms-transform: translateX(-50%);
   transform: translateX(-50%); }
 
-/* default column styling */
 dl#csschart span {
   width: 98%;
   height: 50%;
@@ -985,8 +835,6 @@ dl#csschart .sub {
 dl#csschart .sub span {
   background: #495057; }
 
-/* // column types */
-/* percentages */
 dl#csschart .p0 span {
   height: 0.5%; }
 
@@ -1289,5 +1137,3 @@ dl#csschart .p99 span {
 
 dl#csschart .p100 span {
   height: 100%; }
-
-/* // percentages */

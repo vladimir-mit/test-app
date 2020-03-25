@@ -1,0 +1,19 @@
+@media (min-width: 320px) {
+  ul.yAxis li,
+  ul.xAxis li,
+  dl#csschart span b {
+    font-size: 12px; }
+  ul.xAxis li {
+    padding: 0 1%; } }
+
+@media (min-width: 760px) {
+  ul.yAxis li,
+  ul.xAxis li,
+  dl#csschart span b {
+    font-size: 14px; } }
+
+@media (min-width: 990px) {
+  ul.yAxis li,
+  ul.xAxis li,
+  dl#csschart span b {
+    font-size: 16px; } }
